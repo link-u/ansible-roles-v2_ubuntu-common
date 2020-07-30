@@ -1,0 +1,33 @@
+---
+# handlers/main.yml (ubuntu-common)
+# Prefix : uc
+
+- name: Restart sshd
+  systemd:
+    name: ssh.service
+    state: restarted
+
+- name: Reload sshd
+  systemd:
+    name: ssh.service
+    state: reloaded
+
+- name: update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: Restart apport
+  service:
+    name: apport
+    state: restarted
+
+- name: "Print warning for ubuntu-common (Check for deleted variables)"
+  debug:
+    msg: "{{ __uc_check_deleted_vars.stdout_lines }}"
+  failed_when: yes
+  ignore_errors: yes
+
+- name: "Print warning for ubuntu-common (Check for changed variables)"
+  debug:
+    msg: "{{ __uc_check_changed_vars.stdout_lines }}"
+  failed_when: yes
+  ignore_errors: yes

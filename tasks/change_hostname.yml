@@ -1,0 +1,19 @@
+---
+# tasks/change_hostname.yml (ubuntu-common)
+# Prefix : uc
+# インベントリファイルのホスト名をサーバのホスト名に変更する
+# また, /etc/hosts 内も変更する.
+
+- name: Remember old hostname
+  set_fact:
+    _uc_old_hostname: "{{ ansible_hostname }}"
+
+- name: Set new hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: rewrite /etc/hosts with new hostname
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "{{ _uc_old_hostname }}"
+    line: "127.0.0.1 localhost {{ inventory_hostname }}"

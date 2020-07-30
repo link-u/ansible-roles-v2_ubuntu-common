@@ -1,0 +1,26 @@
+---
+# tasks/install.yml (ubuntu_common)
+# Prefix : uc
+
+- name: Trust our package maintainers.
+  apt_key:
+    id: 4DE76DC836A27DBAE17FAC4B09C9B9C18F429AAE
+    url: https://pkg.link-u.co.jp/key.asc
+    state: present
+
+- name: Add our apt repository.
+  apt_repository:
+    repo: deb https://pkg.link-u.co.jp/{{ ansible_distribution_release }} ./
+    state: present
+  register: __uc_add_apt_repo
+
+- name: Update apt repository
+  apt:
+    update_cache: yes
+  when: __uc_add_apt_repo.changed | bool
+
+- name: Install packages
+  apt:
+    name: "{{ uc_install_default_packages + uc_install_extra_packages }}"
+    update_cache: True
+    state: present

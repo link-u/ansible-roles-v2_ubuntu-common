@@ -1,0 +1,13 @@
+---
+
+- name: Check if ssh_password_auth has valid value
+  fail:
+    msg: sshd_password_auth must be 'yes' or 'no'
+  when: sshd_password_auth != 'yes' and sshd_password_auth != 'no'
+
+- name: Set if ssh password auth is allowed or not
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: "0644"
+  notify: Reload sshd
