@@ -1,0 +1,96 @@
+---
+# defaults/main.yml (ubuntu_common)
+# Prefix : uc
+
+## インストールフラグ
+#  * False にすると install.yml をスキップできる.
+#  * install.yml 以外を流し込みたいときに使う.
+#  * install.yml の中には apt 関係のモジュールが書き込まれている.
+uc_install_flag: True
+
+## インストールパッケージ (デフォルト)
+#   * 滅多に変更しない.
+#   * インストールしたくないパッケージがあるなら修正するくらい.
+uc_install_default_packages: >-
+  {{ ubuntu_common_install_default_packages |
+    default([
+      "dstat",
+      "vim",
+      "htop",
+      "curl",
+      "wget",
+      "zip",
+      "unzip",
+      "git",
+      "tzdata",
+      "python3-pip",
+      "language-pack-ja",
+      "nvme-cli",
+      "smartmontools",
+  ]) }}
+
+## インストールパッケージ (外部から拡張 ※ group_vars 等)
+#  * リスト形式でパッケージを指定
+uc_install_extra_packages: "{{ ubuntu_common_install_extra_packages | default([]) }}"
+# 設定例
+# uc_install_extra_packages:
+#   - "gcc"
+#   - "g++"
+
+## OS の基本設定
+uc_change_hostname: "{{ change_hostname | default(True) }}"
+uc_change_timezone: "{{ change_timezone | default(False) }}"
+uc_change_sshd_config: "{{ change_sshd_config | default(True) }}"
+uc_default_system_timezone: "{{ default_system_timezone | default('Asia/Tokyo') }}"
+
+## sshd_config の基本設定
+uc_sshd_password_auth: "{{ sshd_password_auth | default('no') }}" # ブール値ではなく文字列で指定
+uc_sshd_match_configs: "{{ sshd_match_configs | default([]) }}"
+### 設定例
+# uc_sshd_match_configs:
+#   - type: User
+#     pattern: linux_user
+#     lines:
+#       - PasswordAuthentication yes
+
+## カーネルパラメータを変更するかどうかの判定
+uc_change_sysctl_parameter: "{{ change_sysctl_parameter | default(True) }}"
+## カーネルパラメータ (デフォルト値)
+__uc_defaults_sysctl_parameters:
+  net.core.rmem_max: 16777216
+  net.core.wmem_max: 16777216
+  net.core.rmem_default: 16777216
+  net.core.wmem_default: 16777216
+  net.core.optmem_max: 40960
+  net.ipv4.tcp_rmem: 4096 87380 16777216
+  net.ipv4.tcp_wmem: 4096 65536 16777216
+  net.core.netdev_max_backlog: 65535
+  net.core.somaxconn: 65535
+  net.ipv4.tcp_max_syn_backlog: 65535
+  net.ipv4.tcp_max_tw_buckets: 200000
+  net.ipv4.tcp_slow_start_after_idle: 0
+  net.ipv4.tcp_abort_on_overflow: 1
+  net.ipv4.tcp_tw_reuse: 1
+  net.ipv4.tcp_fin_timeout: 30
+  net.ipv4.ip_local_port_range: 10000 65535
+  fs.aio-max-nr: 1048576
+## カーネルパラメータ (外部からの拡張 ※空のハッシュで初期化)
+uc_sysctl_parameters: "{{ sysctl_parameters | default({}) }}"
+## カーネルパラメータ (デフォルト + 外部からの拡張)
+__uc_combined_sysctl_parameters: "{{ __uc_defaults_sysctl_parameters | combine(uc_sysctl_parameters, recursive=True) }}"
+# カーネルパラメータの他の設定例
+# 一部だけ指定したり, defaults/main.yml に無いカーネルパラメータも指定できる.
+# uc_sysctl_parameters:
+#   fs.inotify.max_user_watches: 5000000
+#   net.netfilter.nf_conntrack_max: 10000000
+#   net.nf_conntrack_max: 10000000
+#   net.netfilter.nf_conntrack_tcp_timeout_established: 86400
+#   net.netfilter.nf_conntrack_tcp_timeout_time_wait: 10
+#   net.netfilter.nf_conntrack_buckets: 1250000
+
+## apport 関係
+# * PHP-fpm がクラッシュしたときに apport 機能の権限周りでエラーになるため、
+#   apport 機能を OFF にできるようにする
+# * local など apport がない環境では change_default_apport を false にする
+uc_change_default_apport: "{{ ubuntu_common_change_default_apport | default(False) }}"
+uc_disable_apport: "{{ ubuntu_common_disable_apport | default(False) }}"

@@ -1,0 +1,45 @@
+---
+# tasks/configure.yml (ubuntu_common)
+# Prefix : uc
+
+- name: Set Japanese locale
+  locale_gen:
+    name: ja_JP.UTF-8
+
+- name: Changing hostname
+  import_tasks: change_hostname.yml
+  when:
+    - uc_change_hostname | bool
+
+- name: Changing timezone
+  import_tasks: change_timezone.yml
+  when:
+    - uc_change_timezone | bool
+
+- name: Changing sshd config
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: "0644"
+  notify: Reload sshd
+  when:
+    - uc_change_sshd_config | bool
+
+- name: Tuning kernel parameters
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ __uc_combined_sysctl_parameters | dict2items }}"
+  when:
+    - uc_change_sysctl_parameter | bool
+  tags: ["sysctl"]
+
+- name: Modify /etc/default/apport
+  lineinfile:
+    dest: /etc/default/apport
+    regexp: "^enabled="
+    line: "enabled={{ '0' if uc_disable_apport else '1' }}"
+  notify: Restart apport
+  when:
+    - uc_change_default_apport | bool
+  tags: ["apport"]

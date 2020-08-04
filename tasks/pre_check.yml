@@ -1,0 +1,75 @@
+---
+# tasks/pre_check.yml (ubuntu-common)
+# Prefix : uc
+
+- name: Check for deleted variables
+  shell: >-
+    echo "[WARNING]: 以下の変数は削除されました. 以下の URL を確認してください. @y_hashida";
+    echo "    https://github.com/link-u/ansible-roles-v2_ubuntu-common/blob/master/README.md#削除された変数の一覧";
+    {% if sshd_port is defined %}
+      echo "sshd_port";
+    {% endif %}
+  register: __uc_check_deleted_vars
+  check_mode: no
+  changed_when:
+    - (__uc_check_deleted_vars.stdout_lines | length) != 2
+  notify: "Print warning for ubuntu-common (Check for deleted variables)"
+
+- name: Check for changed variables
+  shell: >-
+    echo "[WARNING]: 以下の変数は将来変更される予定です. 以下のように修正を推奨します. @y_hashida";
+    echo "    https://github.com/link-u/ansible-roles-v2_ubuntu-common/blob/master/README.md#変更された変数の一覧";
+    {% if ubuntu_common_install_default_packages is defined %}
+      echo "ubuntu_common_install_default_packages → uc_install_default_packages";
+    {% endif %}
+
+    {% if ubuntu_common_install_extra_packages is defined %}
+      echo "ubuntu_common_install_extra_packages → uc_install_extra_packages";
+    {% endif %}
+
+    {% if change_hostname is defined %}
+      echo "change_hostname → uc_change_hostname";
+    {% endif %}
+
+    {% if change_timezone is defined %}
+      echo "change_timezone → uc_change_timezone";
+    {% endif %}
+
+    {% if change_sshd_config is defined %}
+      echo "change_sshd_config → uc_change_sshd_config";
+    {% endif %}
+
+    {% if default_system_timezone is defined %}
+      echo "default_system_timezone → uc_default_system_timezone";
+    {% endif %}
+
+    {% if sshd_password_auth is defined %}
+      echo "sshd_password_auth → uc_sshd_password_auth";
+    {% endif %}
+
+    {% if sshd_match_configs is defined %}
+      echo "sshd_match_configs → uc_sshd_match_configs";
+    {% endif %}
+
+    {% if change_sysctl_parameter is defined %}
+      echo "change_sysctl_parameter → uc_change_sysctl_parameter";
+    {% endif %}
+
+    {% if sysctl_parameters is defined %}
+      echo "sysctl_parameters → uc_sysctl_parameters";
+    {% endif %}
+
+    {% if ubuntu_common_change_default_apport is defined %}
+      echo "ubuntu_common_change_default_apport → uc_change_default_apport";
+    {% endif %}
+
+    {% if ubuntu_common_disable_apport is defined %}
+      echo "ubuntu_common_disable_apport → uc_disable_apport";
+    {% endif %}
+  register: __uc_check_changed_vars
+  check_mode: no
+  changed_when:
+    - (__uc_check_changed_vars.stdout_lines | length) != 2
+  notify: "Print warning for ubuntu-common (Check for changed variables)"
+
+
