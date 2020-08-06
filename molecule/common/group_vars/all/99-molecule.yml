@@ -1,0 +1,2 @@
+## カーネルパラメータは変更しない
+uc_change_sysctl_parameter: no
