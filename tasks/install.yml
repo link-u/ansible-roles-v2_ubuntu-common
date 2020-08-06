@@ -18,12 +18,6 @@
   apt_repository:
     repo: deb https://pkg.link-u.co.jp/{{ ansible_distribution_release }} ./
     state: present
-  register: __uc_add_apt_repo
-
-- name: Update apt repository
-  apt:
-    update_cache: yes
-  when: __uc_add_apt_repo.changed | bool
 
 - name: Install packages
   apt:
