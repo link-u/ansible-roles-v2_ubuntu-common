@@ -1,2 +1,8 @@
 ## カーネルパラメータは変更しない
 uc_change_sysctl_parameter: no
+
+## OS の基本設定
+uc_change_hostname: True
+uc_change_timezone: True
+uc_change_sshd_config: True
+uc_default_system_timezone: "Asia/Tokyo"
