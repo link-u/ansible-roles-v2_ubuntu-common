@@ -16,6 +16,6 @@ def test_hostname(host):
 def test_timezone(host):
     ansible_vars = host.ansible.get_variables()
     timezone = ansible_vars["uc_default_system_timezone"]
-    assert host.file("/usr/share/zoneinfo/" + timezone).exists
-    assert host.file("/usr/share/zoneinfo/" + timezone).is_symlink
+    assert host.file("/etc/localtime").exists
+    assert host.file("/etc/localtime").is_symlink
     assert host.run("cat /etc/timezone").stdout == (timezone + "\n")
