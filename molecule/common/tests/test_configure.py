@@ -19,3 +19,18 @@ def test_timezone(host):
     assert host.file("/etc/localtime").exists
     assert host.file("/etc/localtime").is_symlink
     assert host.run("cat /etc/timezone").stdout == (timezone + "\n")
+
+def test_openssh_server(host):
+    ssh_service = host.service("ssh")
+    assert ssh_service.is_running
+    assert ssh_service.is_enabled
+
+    script_path = os.path.abspath(__file__)
+    template_dir = os.path.abspath(
+        os.path.dirname(script_path) + "/../../../templates")
+
+    assert not host.ansible(
+        "template",
+        "src=" + template_dir + "/sshd_config.j2 " +
+        "dest='/etc/ssh/sshd_config' " +
+        "mode='0644'")["changed"]
