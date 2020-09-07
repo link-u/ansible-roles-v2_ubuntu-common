@@ -76,6 +76,7 @@ uc_change_sshd_config: yes
 uc_default_system_timezone: "Asia/Tokyo"
 
 ## sshd_config の基本設定
+uc_sshd_port: "22"
 uc_sshd_password_auth: "no"   # ブール値ではなく文字列で指定
 uc_sshd_match_configs: []
 ### 設定例

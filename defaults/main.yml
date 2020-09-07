@@ -44,6 +44,7 @@ uc_change_sshd_config: "{{ change_sshd_config | default(True) }}"
 uc_default_system_timezone: "{{ default_system_timezone | default('Asia/Tokyo') }}"
 
 ## sshd_config の基本設定
+uc_sshd_port: "22"
 uc_sshd_password_auth: "{{ sshd_password_auth | default('no') }}" # ブール値ではなく文字列で指定
 uc_sshd_match_configs: "{{ sshd_match_configs | default([]) }}"
 ### 設定例
