@@ -14,6 +14,7 @@ uc_install_flag: True
 uc_install_default_packages: >-
   {{ ubuntu_common_install_default_packages |
     default([
+      "openssh-server",
       "dstat",
       "vim",
       "htop",

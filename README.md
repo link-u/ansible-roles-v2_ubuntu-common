@@ -47,6 +47,7 @@ uc_install_flag: True
 #   * 滅多に変更しない.
 #   * インストールしたくないパッケージがあるなら修正するくらい.
 uc_install_default_packages:
+  - "openssh-server"
   - "dstat"
   - "vim"
   - "htop"

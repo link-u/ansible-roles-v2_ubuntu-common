@@ -2,6 +2,12 @@
 # tasks/install.yml (ubuntu_common)
 # Prefix : uc
 
+- name: Pre-install packages
+  apt:
+    name: "gpg"
+    state: present
+    update_cache: yes
+
 - name: Trust our package maintainers.
   apt_key:
     id: 4DE76DC836A27DBAE17FAC4B09C9B9C18F429AAE
@@ -12,12 +18,6 @@
   apt_repository:
     repo: deb https://pkg.link-u.co.jp/{{ ansible_distribution_release }} ./
     state: present
-  register: __uc_add_apt_repo
-
-- name: Update apt repository
-  apt:
-    update_cache: yes
-  when: __uc_add_apt_repo.changed | bool
 
 - name: Install packages
   apt:
