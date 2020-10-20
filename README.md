@@ -1,5 +1,7 @@
 # ubuntu-common
 
+![ansible ci](https://github.com/link-u/ansible-roles-v2_ubuntu-common/workflows/ansible%20ci/badge.svg)
+
 ## 目次
 
 <!-- TOC depthFrom:2 -->
