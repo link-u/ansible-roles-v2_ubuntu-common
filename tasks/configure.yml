@@ -27,6 +27,16 @@
   when:
     - uc_change_sshd_config | bool
 
+- name: Set /etc/htoprc (for default htop settings)
+  template:
+    src: >-
+      {{ ((ansible_processor_cores * ansible_processor_count) <= 8) |
+        ternary('htoprc_for_few_cpu_core.j2', 'htoprc_for_more_cpu_core.j2') }}
+    dest: "/etc/htoprc"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
 - name: Tuning kernel parameters
   sysctl:
     name: "{{ item.key }}"
