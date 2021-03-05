@@ -28,6 +28,10 @@ uc_install_default_packages: >-
       "language-pack-ja",
       "nvme-cli",
       "smartmontools",
+      "sssd",
+      "sssd-common",
+      "sssd-tools",
+      "sssd-dbus",
   ]) }}
 
 ## インストールパッケージ (外部から拡張 ※ group_vars 等)

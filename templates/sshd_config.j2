@@ -48,6 +48,10 @@ PermitEmptyPasswords no
 # some PAM modules and threads)
 ChallengeResponseAuthentication no
 
+# LDAP authentication
+AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+AuthorizedKeysCommandUser nobody
+
 # Change to no to disable tunnelled clear text passwords
 PasswordAuthentication {{ uc_sshd_password_auth }}
 
