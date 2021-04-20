@@ -6,6 +6,16 @@
   locale_gen:
     name: ja_JP.UTF-8
 
+- name: Check system locale
+  command: localectl status
+  register: _uc_localectl_result
+  check_mode: no
+  changed_when: false
+
+- name: Change system locale
+  command: update-locale LANG=en_US.UTF-8
+  changed_when: "'LANG=en_US.UTF-8' not in _uc_localectl_result.stdout"
+
 - name: Changing hostname
   import_tasks: change_hostname.yml
   when:
